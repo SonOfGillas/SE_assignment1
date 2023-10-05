@@ -2,10 +2,14 @@
 
 namespace waiting_phase {
 
+  static void init() {
+    //init
+  }
+
   /* public */
   STATUS phase(bool isPhaseChanged) {
     if(isPhaseChanged){
-      //init()
+      init();
     }
     return ok;
   }
