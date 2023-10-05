@@ -7,12 +7,12 @@
 // - sleep fase
 
 enum PHASE {
-  waiting_for_game,
+  waiting_phase,
   game_phase,
   sleep_phase
 };
 
-PHASE currentPhase = waiting_for_game;
+PHASE currentPhase = waiting_phase;
 
 void setup() { 
   Serial.begin(115200);
@@ -21,7 +21,7 @@ void setup() {
 void loop() {
  switch (currentPhase)
  {
- case waiting_for_game:
+ case waiting_phase:
   /* code */
   break;
  case game_phase:
