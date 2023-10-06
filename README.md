@@ -16,8 +16,8 @@ the reverse order by pressing the corresponding buttons B1..B4, within some time
 Each button Bi turns on the corresponding led Li. So if the order in which the LEDs
 were turned off  was for instance 3,1,2,4 (that is: the first led to be turned off
 was L3, then L1, etc), then the LEDs must be turned on again in order 4,2,1,3 (that
-is: first L4, then L2, etc). If the player restores the LEDs on time, the score
-- starting from zero - is increased and the game goes on, repeating the sequence,
+is: first L4, then L2, etc). If the player restores the LEDs on time, the score -
+starting from zero - is increased and the game goes on, repeating the sequence,
 but reducing the times T2 and T3 of some factor F. If the player does not restore
 the LEDs on time in the correct order, the red led Ls is turned on for 1 second
 and the game ends, displaying the score on the serial line.
@@ -35,18 +35,18 @@ and the led Ls starts pulsing again.  When the game starts, all LEDs are switche
 off and a "Go!" message is sent on the serial line. An initial score is set to zero.
 
 During the game:
-    - the LEDs L1..L4 are turned on some random time T1
-    - then, the LEDs are then turned off one by one in some random order, taking T2 time
-    - the player has max T3 time for restoring the LEDs in the inverse order,
-      by pressing the buttons B1..B4 (each button Bi turns on the corresponding led Li)
-    - If the player restores the lights on time and in the correct (inverse) order, then:
-        - the score is increased and a message "New point! Score: XXX" (where XXX
-          is the current score) is sent on the serial line
-        - the game goes on, by reducing the times T2 and T3 of some factor F
-    - If the player does not restore the lights on time in the correct order, then
-      the red led Ls turned on for 1 second and the game ends: a message
-      "Game Over. Final Score: XXX" (where XXX is the final score) is sent on
-      the serial line for 10 seconds, then the game restarts from the initial state.
+- the LEDs L1..L4 are turned on some random time T1
+- then, the LEDs are then turned off one by one in some random order, taking T2 time
+- the player has max T3 time for restoring the LEDs in the inverse order,
+  by pressing the buttons B1..B4 (each button Bi turns on the corresponding led Li)
+- If the player restores the lights on time and in the correct (inverse) order, then:
+    - the score is increased and a message "New point! Score: XXX" (where XXX
+      is the current score) is sent on the serial line
+    - the game goes on, by reducing the times T2 and T3 of some factor F
+- If the player does not restore the lights on time in the correct order, then
+  the red led Ls turned on for 1 second and the game ends: a message
+  "Game Over. Final Score: XXX" (where XXX is the final score) is sent on
+  the serial line for 10 seconds, then the game restarts from the initial state.
 
 
 Before starting the game, the potentiometer Pot device can be used to set the
@@ -55,15 +55,11 @@ difficult). The level must affect the value of the factor F (so that the more
 difficult the game is, the greater the factor F must be).
 
 The assignment:
-    - Develop the game on the Arduino platform, implementing the embedded software
-      in C using the Wiring framework. The game must be based on a superloop control architecture.
-        - Choose concrete values for parameters in order to have the best game play.
-        - For any other aspect not specified, make the choice that you consider most appropriate.
-    - The deliverable must a zipped folder assignment-01.zip including two subfolders:
-        - src
-             - including the Arduino project source code
-        - doc, including
-            - a representation of the schema/breadboard using tools such as
-              TinkerCad or Fritzing or Eagle
-            - a short video (or the link to a video on the cloud) demonstrating the system
+- Develop the game on the Arduino platform, implementing the embedded software
+  in C using the Wiring framework. The game must be based on a superloop control architecture.
+    - Choose concrete values for parameters in order to have the best game play.
+    - For any other aspect not specified, make the choice that you consider most appropriate.
+- The deliverable must a zipped folder assignment-01.zip including two subfolders:
+    - src
+         - including the Arduino project source code
 
