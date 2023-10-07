@@ -1,7 +1,7 @@
 #ifndef __WAITING_PHASE__
 #define __WAITING_PHASE__
 
-#include "../model.h"
+#include "model.h"
 
 namespace waiting_phase {
   /* public */
