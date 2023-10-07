@@ -1,51 +1,51 @@
 // phases: 
 // - game:
 //   - led sequence
-//   - button sequence
+//   - button_ sequence
 //   - end round 
 // - waiting for game:
 //   - fade led
 //   - sleep
 
 #include "model.h"
-#include "waiting_phase.h"
-#include "game_phase.h"
+#include "waiting_phase/waiting_phase.h"
+#include "game_phase/game_phase.h"
 
 // led pin
-#define ledRed 10
-#define ledGreen1 12
-#define ledGreen2 11
-#define ledGreen3 9
-#define ledGreen4 8
+#define LED_RED 10
+#define LED_GREEN_1 12
+#define lED_GREEN_2 11
+#define lED_GREEN_3 9
+#define lED_GREEN_4 8
 
-// button pin
-#define button1 7
-#define button2 6
-#define button3 5
-#define button4 4
+// button_ pin
+#define BUTTON_1 7
+#define BUTTON_2 6
+#define BUTTON_3 5
+#define BUTTON_4 4
 
 // potenziometer
-#define pot A0
+#define POT A0
 
 PHASE currentPhase = waiting;
 bool isPhaseChanged = false;
 STATUS phaseStatus = ok;
-int leds = [ledGreen1,ledGreen2,ledGreen3,ledGreen4];
+int leds[] = {LED_GREEN_1,lED_GREEN_2,lED_GREEN_3,lED_GREEN_4};
 
 void setup() {
   // led initialization
-  pinMode(ledRed, OUTPUT);
-  pinMode(ledGreen1, OUTPUT);
-  pinMode(ledGreen2, OUTPUT);
-  pinMode(ledGreen3, OUTPUT);
-  pinMode(ledGreen4, OUTPUT);
+  pinMode(LED_RED, OUTPUT);
+  pinMode(LED_GREEN_1, OUTPUT);
+  pinMode(lED_GREEN_2, OUTPUT);
+  pinMode(lED_GREEN_3, OUTPUT);
+  pinMode(lED_GREEN_4, OUTPUT);
   // button initializzation
-  pinMode(button1, INPUT_PULLUP);
-  pinMode(button2, INPUT_PULLUP);
-  pinMode(button3, INPUT_PULLUP);
-  pinMode(button4, INPUT_PULLUP);
+  pinMode(BUTTON_1, INPUT_PULLUP);
+  pinMode(BUTTON_2, INPUT_PULLUP);
+  pinMode(BUTTON_3, INPUT_PULLUP);
+  pinMode(BUTTON_4, INPUT_PULLUP);
   //pot
-  pinMode(pot,INPUT)
+  pinMode(POT,INPUT);
 
   Serial.begin(115200);
 }
