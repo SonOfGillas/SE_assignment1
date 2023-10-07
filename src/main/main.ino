@@ -9,7 +9,7 @@
 
 #include "model.h"
 #include "waiting_phase.h"
-//#include "game_phase/game_phase.h"
+#include "game_phase.h"
 
 // led pin
 #define LED_RED 10
@@ -62,7 +62,7 @@ void runPhase(){
     phaseStatus = waiting_phase::phase(isPhaseChanged);
     break;
   case game:
-    //phaseStatus = game_phase::phase(isPhaseChanged);
+    phaseStatus = game_phase::phase(isPhaseChanged);
     break;
   default:
     phaseStatus = err;
