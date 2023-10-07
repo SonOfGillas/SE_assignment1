@@ -11,26 +11,9 @@
 #include "waiting_phase.h"
 #include "game_phase.h"
 
-// led pin
-#define LED_RED 10
-#define LED_GREEN_1 12
-#define LED_GREEN_2 11
-#define LED_GREEN_3 9
-#define LED_GREEN_4 8
-
-// button_ pin
-#define BUTTON_1 7
-#define BUTTON_2 6
-#define BUTTON_3 5
-#define BUTTON_4 4
-
-// potentiometer
-#define POT A0
-
 PHASE currentPhase = waiting;
 bool isPhaseChanged = false;
 STATUS phaseStatus = ok;
-const int leds[] = {LED_GREEN_1, LED_GREEN_2, LED_GREEN_3, LED_GREEN_4};
 
 void setup() {
   // led initialization
