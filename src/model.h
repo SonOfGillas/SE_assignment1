@@ -2,8 +2,8 @@
 #define _MODEL_  
 
 enum PHASE {
-  waiting_phase,
-  game_phase,
+  waiting,
+  game,
 };
 
 enum STATUS {
