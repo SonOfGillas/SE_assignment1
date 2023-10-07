@@ -6,6 +6,13 @@ enum PHASE {
   game,
 };
 
+enum GAME_SUBPHASE {
+  show_sequence,
+  replicate_sequence,
+  end_round
+};
+
+
 enum STATUS {
   ok,
   go_next_phase,
