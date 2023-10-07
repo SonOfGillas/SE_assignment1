@@ -30,7 +30,7 @@
 PHASE currentPhase = waiting;
 bool isPhaseChanged = false;
 STATUS phaseStatus = ok;
-int leds[] = {LED_GREEN_1,lED_GREEN_2,lED_GREEN_3,lED_GREEN_4};
+const int leds[] = {LED_GREEN_1,lED_GREEN_2,lED_GREEN_3,lED_GREEN_4};
 
 void setup() {
   // led initialization
