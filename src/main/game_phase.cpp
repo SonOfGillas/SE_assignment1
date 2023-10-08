@@ -1,5 +1,5 @@
 #include "game_phase.h"
-#include <bits/stdc++.h>
+#include <stdlib.h>  
 
 GAME_SUBPHASE currentGameSubPhase = show_sequence;
 STATUS gameSubPhaseStatus = ok;
@@ -14,18 +14,13 @@ int T3 = 5000; //response time
 namespace game_phase {
   static void init() {
     currentGameSubPhase = show_sequence;
-    gameStartingTime=millis();
-  }
+    gameStartingTime = millis();
 
-  void shuffle_array(int arr[], int n)
-    {
-        unsigned seed = gameStartingTime;
-
-        // Shuffling our array
-        shuffle(arr, arr + n,
-                default_random_engine(seed));
-  
+    // copy leds into sequence
+    for(int i=0;i<NUM_GREEN_LEDS;i++){
+      sequence[i] = leds[i];
     }
+  }
 
   static STATUS showSequence() {
     for(int led : leds)
@@ -33,20 +28,22 @@ namespace game_phase {
     
     delay(T1);
 
-    // copy leds into sequence
-    for(int i=0;i<NUM_GREEN_LEDS;i++){
-      sequence[i] = leds[i];
+    //shuffle sequence
+    srand (gameStartingTime); //seed
+    for (int i=0; i < NUM_GREEN_LEDS; i++) {
+       int n = rand() % NUM_GREEN_LEDS ;  // Integer from 0 to NUM_GREEN_LEDS-1
+       int temp = sequence[n];
+       sequence[n] =  sequence[i];
+       sequence[i] = temp;
+    }
+    
+    //turn off leds in sequence
+    for(int led : sequence){
+      digitalWrite(led, LOW);
+      delay(T2);
     }
 
-    // shuffle sequence
-    int n = sizeof(sequence) / sizeof(sequence[0]);
-    shuffle_array(sequence, n);
-
-    //better shuffle ?
-    random_shuffle(std::begin(a), std::end(a));
-    
-
-    return ok;
+    return go_next_phase;
   }
 
   static STATUS replicateSequence() {
