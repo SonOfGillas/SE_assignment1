@@ -10,7 +10,7 @@
 #define LED_GREEN_4 8
 
 // button_ pin
-#define NUM_BUTTONS 4
+#define NUM_BUTTONS NUM_GREEN_LEDS
 #define BUTTON_1 7
 #define BUTTON_2 6
 #define BUTTON_3 5

@@ -11,7 +11,7 @@ long replicateSequenceStartingTime;
 int sequence[NUM_GREEN_LEDS];
 int responce[NUM_GREEN_LEDS];
 int responceIndex = 0;
-int lastTimeTheButtonsWerePressed[NUM_GREEN_LEDS];
+int lastTimeTheButtonsWerePressed[NUM_BUTTONS];
 long currentTime = 0; 
 
 int T1 = 2000; //pause between match
@@ -55,7 +55,7 @@ namespace game_phase {
   static void initReplicateSequence(){
     replicateSequenceStartingTime = millis(); // the reponce time starts now
     responceIndex = 0; 
-     for(int i=0;i<NUM_GREEN_LEDS;i++){
+     for(int i=0;i<NUM_BUTTONS;i++){
       responce[i] = NO_RESPONSE; // set responce array
       lastTimeTheButtonsWerePressed[i] = 0; // set variable for check the button bouncing
     }
@@ -69,7 +69,7 @@ namespace game_phase {
     }
 
     //read all buttons
-    for(int i=0;i<NUM_GREEN_LEDS;i++){
+    for(int i=0;i<NUM_BUTTONS;i++){
       if(currentTime - lastTimeTheButtonsWerePressed[i] > BUTTON_PRESS_DELAY){
         //the button are set in pullup mode, so if the button is pressed the value is LOW
         if(digitalRead(buttons[i]) == LOW){
