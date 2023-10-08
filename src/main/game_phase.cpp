@@ -6,6 +6,7 @@
 
 GAME_SUBPHASE currentGameSubPhase = show_sequence;
 STATUS gameSubPhaseStatus = ok;
+int score = 0;
 bool gameOver = false;
 long replicateSequenceStartingTime;
 int sequence[NUM_GREEN_LEDS];
@@ -20,6 +21,7 @@ int T3 = 5000; //response time
 
 namespace game_phase {
   static void init() {
+    score = 0;
     currentGameSubPhase = show_sequence;
 
     for(int i=0;i<NUM_GREEN_LEDS;i++){
@@ -59,6 +61,7 @@ namespace game_phase {
       responce[i] = NO_RESPONSE; // set responce array
       lastTimeTheButtonsWerePressed[i] = 0; // set variable for check the button bouncing
     }
+    Serial.println("Go!");
   }
 
   static STATUS replicateSequence() {
@@ -86,6 +89,7 @@ namespace game_phase {
   }
 
   static STATUS endRound() {
+    //check if the responce time is over
     currentTime = millis();
     if(currentTime - replicateSequenceStartingTime > T3){
       gameOver = true;
@@ -98,10 +102,11 @@ namespace game_phase {
     for(int i=0,k=NUM_GREEN_LEDS-1;i<NUM_GREEN_LEDS;i++,k--){
       if(sequence[i] != responce[i]){
         gameOver = true;
-        break;
+        return go_next_phase;
       }
     }
 
+    score++;
     return go_next_phase;
   }
 
