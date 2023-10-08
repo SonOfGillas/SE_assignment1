@@ -11,7 +11,8 @@ long replicateSequenceStartingTime;
 int sequence[NUM_GREEN_LEDS];
 int responce[NUM_GREEN_LEDS];
 int responceIndex = 0;
-int lastTimeTheButtonsWerePressed[NUM_GREEN_LEDS]; 
+int lastTimeTheButtonsWerePressed[NUM_GREEN_LEDS];
+long currentTime = 0; 
 
 int T1 = 2000; //pause between match
 int T2 = 1000; //pause between one led of the sequence turn off
@@ -61,7 +62,7 @@ namespace game_phase {
   }
 
   static STATUS replicateSequence() {
-    long currentTime = millis();
+    currentTime = millis();
     //check if the responce time is over or if the user has already filled the responce array
     if(currentTime - replicateSequenceStartingTime > T3 || responceIndex >= NUM_GREEN_LEDS){
       return go_next_phase;
@@ -85,10 +86,22 @@ namespace game_phase {
   }
 
   static STATUS endRound() {
-    //check here if the match is over
-    if(true){
+    currentTime = millis();
+    if(currentTime - replicateSequenceStartingTime > T3){
       gameOver = true;
-    } 
+      return go_next_phase;
+    }
+
+    gameOver = false;
+    //check if the user has replicated the sequence
+    //NOTE: the responce must be in the reverse order
+    for(int i=0,k=NUM_GREEN_LEDS-1;i<NUM_GREEN_LEDS;i++,k--){
+      if(sequence[i] != responce[i]){
+        gameOver = true;
+        break;
+      }
+    }
+
     return go_next_phase;
   }
 
