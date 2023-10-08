@@ -6,6 +6,7 @@
 // - waiting for game:
 //   - fade led
 //   - sleep
+//   - set difficulty with potentiometer
 
 #include "model.h"
 #include "waiting_phase.h"

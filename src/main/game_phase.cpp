@@ -14,18 +14,22 @@ int responce[NUM_GREEN_LEDS];
 int responceIndex = 0;
 int lastTimeTheButtonsWerePressed[NUM_BUTTONS];
 long currentTime = 0; 
-
-int T1 = 2000; //pause between match
-int T2 = 1000; //pause between one led of the sequence turn off
-int T3 = 5000; //response time
+int gameT1;
+int gameT2;
+int gameT3;
 
 namespace game_phase {
   static void init() {
     score = 0;
     currentGameSubPhase = show_sequence;
 
+    gameT1 = T1;
+    gameT2 = T2;
+    gameT3 = T3;
+  
+    // copy leds into sequence
     for(int i=0;i<NUM_GREEN_LEDS;i++){
-      sequence[i] = leds[i];  // copy leds into sequence
+      sequence[i] = leds[i];  
     }
   }
 
@@ -108,6 +112,10 @@ namespace game_phase {
 
     score++;
     Serial.println("New point! Score: " + String(score));
+    //decrease the times
+    gameT1 -= gameT1 * difficulty / 100;
+    gameT2 -= gameT2 * difficulty / 100;
+    gameT3 -= gameT3 * difficulty / 100;
     return go_next_phase;
   }
 
