@@ -1,4 +1,5 @@
 #include "game_phase.h"
+#include "Arduino.h"
 #include <stdlib.h>  
 
 #define NO_RESPONSE -1
@@ -33,6 +34,16 @@ namespace game_phase {
     }
   }
 
+  static void initReplicateSequence(){
+    replicateSequenceStartingTime = millis(); // the reponce time starts now
+    responceIndex = 0; 
+     for(int i=0;i<NUM_BUTTONS;i++){
+      responce[i] = NO_RESPONSE; // set responce array
+      lastTimeTheButtonsWerePressed[i] = 0; // set variable for check the button bouncing
+    }
+    Serial.println("Go!");
+  }
+
   static STATUS showSequence() {
     for(int led : leds)
       digitalWrite(led, HIGH);
@@ -56,16 +67,6 @@ namespace game_phase {
 
     initReplicateSequence();
     return go_next_phase;
-  }
-
-  static void initReplicateSequence(){
-    replicateSequenceStartingTime = millis(); // the reponce time starts now
-    responceIndex = 0; 
-     for(int i=0;i<NUM_BUTTONS;i++){
-      responce[i] = NO_RESPONSE; // set responce array
-      lastTimeTheButtonsWerePressed[i] = 0; // set variable for check the button bouncing
-    }
-    Serial.println("Go!");
   }
 
   static STATUS replicateSequence() {

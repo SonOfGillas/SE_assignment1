@@ -26,8 +26,6 @@ const int T1 = 2000; //pause between match
 const int T2 = 1000; //pause between one led of the sequence turn off
 const int T3 = 5000; //response time
 
-extern DIFFICULTY difficulty;
-
 enum PHASE {
   waiting,
   game,
@@ -52,5 +50,7 @@ enum DIFFICULTY {
   hard = 15,
   extreme = 20
 };
+
+extern DIFFICULTY difficulty;
 
 #endif
