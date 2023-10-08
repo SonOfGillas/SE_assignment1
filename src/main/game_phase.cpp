@@ -107,6 +107,7 @@ namespace game_phase {
     }
 
     score++;
+    Serial.println("New point! Score: " + String(score));
     return go_next_phase;
   }
 
@@ -145,7 +146,12 @@ namespace game_phase {
     }
     runGameSubPhase();
     checkGameSubPhaseSwitch();
-    return gameOver? go_next_phase : ok;
+    if(gameOver){
+      Serial.println("Game Over! Final Score: " + String(score));
+      delay(10000); // wait 10 seconds before restart to initial state
+      return go_next_phase;
+    }
+    return ok;
   }
 }
 
