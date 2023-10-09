@@ -9,7 +9,7 @@ namespace waiting_phase {
   const uint8_t INTN = digitalPinToInterrupt(buttons[0]);
   unsigned short value, out = 0;
   short inc = 1;
-  bool exit = false;
+  volatile bool exit = false;
 
   static void next_phase() {
     exit = true;
