@@ -21,6 +21,14 @@ namespace waiting_phase {
     Timer1.detachInterrupt();
   }
 
+  static void sleep() {
+    set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+    sleep_enable();
+    sleep_mode();
+    sleep_disable();
+    next_phase();
+  }
+
   static void init() {
     // turn off green leds
     for(int led: leds) {
@@ -32,7 +40,7 @@ namespace waiting_phase {
 
     // init 10s timer
     Timer1.initialize(10000000);  // lengh in microseconds
-    Timer1.attachInterrupt(next_phase);
+    Timer1.attachInterrupt(sleep);
 
     // enable B1 interrupt
     attachInterrupt(digitalPinToInterrupt(INTN), next_phase, FALLING);
