@@ -13,7 +13,7 @@
 #include "game_phase.h"
 
 PHASE currentPhase = waiting;
-bool isPhaseChanged = false;
+bool isPhaseChanged = true;
 STATUS phaseStatus = ok;
 
 void setup() {
@@ -49,6 +49,7 @@ void runPhase(){
     phaseStatus = game_phase::phase(isPhaseChanged);
     break;
   default:
+    Serial.println("Error");
     phaseStatus = err;
     break;
   }

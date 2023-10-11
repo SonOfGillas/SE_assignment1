@@ -3,30 +3,36 @@
 #include "Arduino.h"
 #include "waiting_phase.h"
 #include <TimerOne.h>
+#include <avr/sleep.h>
 
 namespace waiting_phase {
 
   const uint8_t INTN = digitalPinToInterrupt(buttons[0]);
   unsigned short value, out = 0;
-  short inc = 1;
+  short inc = 3;
   volatile bool exit = false;
+  volatile bool toSleep = false;
 
   static void next_phase() {
     exit = true;
 
     // disable B1 interrupt
-    detachInterrupt(digitalPinToInterrupt(INTN));
+    detachInterrupt(INTN);
 
     // disable Timer1 interrupt
     Timer1.detachInterrupt();
+
+    digitalWrite(LED_RED, LOW);
   }
 
   static void sleep() {
     set_sleep_mode(SLEEP_MODE_PWR_DOWN);
-    sleep_enable();
     sleep_mode();
-    sleep_disable();
     next_phase();
+  }
+
+  static void enableSleep() {
+    toSleep = true;
   }
 
   static void init() {
@@ -36,21 +42,21 @@ namespace waiting_phase {
     }
 
     // turn off red led
-    digitalWrite(LED_RED, HIGH);
+    digitalWrite(LED_RED, LOW);
 
     // init 10s timer
     Timer1.initialize(10000000);  // lengh in microseconds
-    Timer1.attachInterrupt(sleep);
+    Timer1.attachInterrupt(enableSleep);
 
     // enable B1 interrupt
-    attachInterrupt(digitalPinToInterrupt(INTN), next_phase, FALLING);
+    attachInterrupt(INTN, next_phase, FALLING);
 
     // print to serial line
     Serial.println("Welcome to the Restore the Light Game. Press Key B1 to Start");
   }
 
   /* public */
-  STATUS phase(bool isPhaseChanged) {
+  STATUS phase(const bool isPhaseChanged) {
     if(isPhaseChanged){
       init();
     }
@@ -63,6 +69,8 @@ namespace waiting_phase {
 
     delay(100);
 
-    return exit ? ok : go_next_phase;
+    if(toSleep) sleep();
+
+    return exit ? go_next_phase : ok;
   }
 }
