@@ -4,20 +4,29 @@
 #include "waiting_phase.h"
 #include <TimerOne.h>
 #include <avr/sleep.h>
+#include <EnableInterrupt.h>
 
 namespace waiting_phase {
 
   const uint8_t INTN = digitalPinToInterrupt(buttons[0]);
+  
   unsigned short value, out = 0;
   short inc = 3;
   volatile bool exit = false;
   volatile bool toSleep = false;
 
+  static void wakeUp(){
+    for(int button:buttons){
+      disableInterrupt(digitalPinToInterrupt(button));
+    }
+    init();
+  }
+
   static void next_phase() {
     exit = true;
 
     // disable B1 interrupt
-    detachInterrupt(INTN);
+    disableInterrupt(INTN);
 
     // disable Timer1 interrupt
     Timer1.detachInterrupt();
@@ -26,6 +35,9 @@ namespace waiting_phase {
   }
 
   static void sleep() {
+    for(int button:buttons){
+      enableInterrupt(digitalPinToInterrupt(button), wakeUp, FALLING);
+    }
     set_sleep_mode(SLEEP_MODE_PWR_DOWN);
     sleep_mode();
     next_phase();
@@ -49,7 +61,7 @@ namespace waiting_phase {
     Timer1.attachInterrupt(enableSleep);
 
     // enable B1 interrupt
-    attachInterrupt(INTN, next_phase, FALLING);
+    enableInterrupt(INTN, next_phase, FALLING);
 
     // print to serial line
     Serial.println("Welcome to the Restore the Light Game. Press Key B1 to Start");
