@@ -120,9 +120,8 @@ namespace game_phase {
     return go_next_phase;
   }
 
-  static void runGameSubPhase(){
-    switch (currentGameSubPhase)
-    {
+  static void runGameSubPhase() {
+    switch (currentGameSubPhase) {
       case show_sequence:
         gameSubPhaseStatus = showSequence();
         break;
@@ -137,20 +136,27 @@ namespace game_phase {
     }
   }
 
-  static void checkGameSubPhaseSwitch(){
+  static void checkGameSubPhaseSwitch() {
     if(gameSubPhaseStatus == go_next_phase){
-      if(currentGameSubPhase == end_round){
-        currentGameSubPhase = show_sequence;
-      } else {
-        //increment currentGameSubPhase
-        currentGameSubPhase = static_cast<GAME_SUBPHASE>(static_cast<int>(currentGameSubPhase) + 1); 
+      switch(currentGameSubPhase) {
+        case end_round:
+          currentGameSubPhase = show_sequence;
+          break;
+        case show_sequence:
+          currentGameSubPhase = replicate_sequence;
+          break;
+        case replicate_sequence:
+          currentGameSubPhase = end_round;
+          break;
+        default:
+          break;
       }
     }
   }
 
   /* public */
-  STATUS phase(bool isPhaseChanged) {
-    if(isPhaseChanged){
+  STATUS phase(const bool isPhaseChanged) {
+    if(isPhaseChanged) {
       init();
     }
     runGameSubPhase();
