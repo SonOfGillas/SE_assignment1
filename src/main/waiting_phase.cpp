@@ -9,14 +9,14 @@
 namespace waiting_phase {
 
   const uint8_t INTN = digitalPinToInterrupt(buttons[0]);
-  
+
   unsigned short value, out = 0;
   short inc = 3;
   volatile bool exit = false;
   volatile bool toSleep = false;
 
   static void wakeUp(){
-    for(int button:buttons){
+    for(int button: buttons){
       disableInterrupt(digitalPinToInterrupt(button));
     }
     init();
@@ -30,14 +30,13 @@ namespace waiting_phase {
 
     // disable Timer1 interrupt
     Timer1.detachInterrupt();
-
-    digitalWrite(LED_RED, LOW);
   }
 
   static void sleep() {
-    for(int button:buttons){
+    for(int button: buttons){
       enableInterrupt(digitalPinToInterrupt(button), wakeUp, FALLING);
     }
+    digitalWrite(LED_RED, LOW); // shut down red led to save power
     set_sleep_mode(SLEEP_MODE_PWR_DOWN);
     sleep_mode();
     next_phase();
@@ -83,6 +82,21 @@ namespace waiting_phase {
 
     if(toSleep) sleep();
 
-    return exit ? go_next_phase : ok;
+    if(exit) {
+      // update difficulty
+      unsigned int pot = analogRead(POT);
+      if(pot <= 256) {
+        difficulty = easy;
+      } else if(pot <= 512) {
+        difficulty = medium;
+      } else if(pot <= 768) {
+        difficulty = hard;
+      } else { // <= 1024
+        difficulty = extreme;
+      }
+      return go_next_phase;
+    } else {
+      return ok;
+    }
   }
 }
