@@ -11,7 +11,7 @@ namespace waiting_phase {
   const uint8_t INTN = buttons[0];
 
   unsigned short value, out = 0;
-  short inc = 3;
+  short inc = 5;
   volatile bool exit = false;
   volatile bool toSleep = false;
 
@@ -71,6 +71,7 @@ namespace waiting_phase {
 
     // print to serial line
     Serial.println("Welcome to the Restore the Light Game. Press Key B1 to Start");
+    Serial.flush();
   }
 
   /* public */
@@ -82,10 +83,10 @@ namespace waiting_phase {
     // linear pulsing PWM
     analogWrite(LED_RED, out);
     value += inc;
-    out = pow(255, value/100.0);
-    if (value + inc >= 100 || value + inc <= 0) inc = -inc;
+    out = pow(255, value/200.0);
+    if (value + inc >= 200 || value + inc <= 0) inc = -inc;
 
-    delay(100);
+    delay(50);
 
     if(toSleep) {
       sleep();
