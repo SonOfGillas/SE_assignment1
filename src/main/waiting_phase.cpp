@@ -8,18 +8,18 @@
 
 namespace waiting_phase {
 
-  const uint8_t INTN = digitalPinToInterrupt(buttons[0]);
+  const uint8_t INTN = buttons[0];
 
   unsigned short value, out = 0;
   short inc = 3;
   volatile bool exit = false;
   volatile bool toSleep = false;
 
-  static void wakeUp(){
+  static void wakeUp() {
+    toSleep = false;
     for(int button: buttons){
-      disableInterrupt(digitalPinToInterrupt(button));
+      disableInterrupt(button);
     }
-    init();
   }
 
   static void next_phase() {
@@ -33,13 +33,16 @@ namespace waiting_phase {
   }
 
   static void sleep() {
+    disableInterrupt(INTN);
+    Timer1.detachInterrupt();
+
     for(int button: buttons){
-      enableInterrupt(digitalPinToInterrupt(button), wakeUp, FALLING);
+      enableInterrupt(button, wakeUp, FALLING);
     }
     digitalWrite(LED_RED, LOW); // shut down red led to save power
+
     set_sleep_mode(SLEEP_MODE_PWR_DOWN);
     sleep_mode();
-    next_phase();
   }
 
   static void enableSleep() {
@@ -47,6 +50,10 @@ namespace waiting_phase {
   }
 
   static void init() {
+    exit = false;
+    toSleep = false;
+    value = 0;
+    if (inc < 0) inc = -inc;
     // turn off green leds
     for(int led: leds) {
       digitalWrite(led, LOW);
@@ -80,7 +87,10 @@ namespace waiting_phase {
 
     delay(100);
 
-    if(toSleep) sleep();
+    if(toSleep) {
+      sleep();
+      init();
+    }
 
     if(exit) {
       // update difficulty
