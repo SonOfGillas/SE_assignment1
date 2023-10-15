@@ -15,18 +15,16 @@ int responce[NUM_GREEN_LEDS];
 int responceIndex = 0;
 long lastTimeTheButtonsWerePressed[NUM_BUTTONS];
 long currentTime = 0; 
-int gameT1;
-int gameT2;
-int gameT3;
+float gameT2;
+float gameT3;
 
 namespace game_phase {
   static void init() {
-    Serial.println("Difficulty: " + String(difficulty));
+    Serial.println("Difficulty: -" + String(difficulty)+"% time each round");
     gameOver=false;
     score = 0;
     currentGameSubPhase = show_sequence;
 
-    gameT1 = T1;
     gameT2 = T2;
     gameT3 = T3;
   
@@ -34,6 +32,8 @@ namespace game_phase {
     for(int i=0;i<NUM_GREEN_LEDS;i++){
       sequence[i] = leds[i];  
     }
+
+    digitalWrite(LED_RED, LOW);
   }
 
   static void initReplicateSequence(){
@@ -63,7 +63,7 @@ namespace game_phase {
     
     //turn off leds in sequence
     for(int led : sequence){
-      delay(T2);
+      delay(gameT2);
       digitalWrite(led, LOW);
     }
 
@@ -74,7 +74,7 @@ namespace game_phase {
   static STATUS replicateSequence() {
     currentTime = millis();
     //check if the responce time is over or if the user has already filled the responce array
-    if(currentTime - replicateSequenceStartingTime > T3 || responceIndex >= NUM_GREEN_LEDS){
+    if(currentTime - replicateSequenceStartingTime > gameT3 || responceIndex >= NUM_GREEN_LEDS){
       return go_next_phase;
     }
 
@@ -111,7 +111,7 @@ namespace game_phase {
 
     //check if the responce time is over
     currentTime = millis();
-    if(currentTime - replicateSequenceStartingTime > T3){
+    if(currentTime - replicateSequenceStartingTime > gameT3){
       gameOver = true;
       return go_next_phase;
     }
@@ -119,8 +119,8 @@ namespace game_phase {
     gameOver = false;
     //check if the user has replicated the sequence
     //NOTE: the responce must be in the reverse order
-    for(int i=0,k=NUM_GREEN_LEDS-1;i<NUM_GREEN_LEDS;i++,k--){
-      if(sequence[i] != responce[i]){
+    for(int i=0,k=NUM_GREEN_LEDS-1;i<NUM_GREEN_LEDS && k >= 0;i++,k--){
+      if(sequence[i] != responce[k]){
         gameOver = true;
         return go_next_phase;
       }
@@ -129,9 +129,9 @@ namespace game_phase {
     score++;
     Serial.println("New point! Score: " + String(score));
     //decrease the times
-    gameT1 -= gameT1 * difficulty / 100;
-    gameT2 -= gameT2 * difficulty / 100;
-    gameT3 -= gameT3 * difficulty / 100;
+    gameT2 -= (gameT2 * difficulty) / 100.0;
+    gameT3 -= (gameT3 * difficulty) / 100.0;
+
     return go_next_phase;
   }
 
@@ -178,6 +178,7 @@ namespace game_phase {
     checkGameSubPhaseSwitch();
     if(gameOver){
       Serial.println("Game Over! Final Score: " + String(score));
+      digitalWrite(LED_RED, HIGH);
       delay(10000); // wait 10 seconds before restart to initial state
       return go_next_phase;
     }
