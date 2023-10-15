@@ -96,19 +96,6 @@ namespace game_phase {
   }
 
   static STATUS endRound() {
-    Serial.println("Sequence: ");
-    for(int sequence: sequence){
-      Serial.print(sequence);
-      Serial.print(" ");
-    }
-    Serial.println();
-    Serial.println("Response: ");
-    for(int responce: responce){
-      Serial.print(responce);
-      Serial.print(" ");
-    }
-    Serial.println();
-
     //check if the responce time is over
     currentTime = millis();
     if(currentTime - replicateSequenceStartingTime > gameT3){
