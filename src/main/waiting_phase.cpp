@@ -13,10 +13,11 @@ namespace waiting_phase {
   unsigned short value, out = 0;
   short inc = 5;
   volatile bool exit = false;
-  volatile bool toSleep = false;
+  long initilTime = 0;
+  long currentTime = 0;
+  long waitBeforeSleep = 10000; //10 sec
 
   static void wakeUp() {
-    toSleep = false;
     for(int button: buttons){
       disableInterrupt(button);
     }
@@ -28,8 +29,6 @@ namespace waiting_phase {
     // disable B1 interrupt
     disableInterrupt(INTN);
 
-    // disable Timer1 interrupt
-    Timer1.detachInterrupt();
   }
 
   static void sleep() {
@@ -45,13 +44,10 @@ namespace waiting_phase {
     sleep_mode();
   }
 
-  static void enableSleep() {
-    toSleep = true;
-  }
-
   static void init() {
     exit = false;
-    toSleep = false;
+    initilTime = millis();
+    currentTime = millis();
     value = 0;
     if (inc < 0) inc = -inc;
     // turn off green leds
@@ -61,10 +57,6 @@ namespace waiting_phase {
 
     // turn off red led
     digitalWrite(LED_RED, LOW);
-
-    // init 10s timer
-    Timer1.initialize(10000000);  // lengh in microseconds
-    Timer1.attachInterrupt(enableSleep);
 
     // enable B1 interrupt
     enableInterrupt(INTN, next_phase, FALLING);
@@ -88,7 +80,8 @@ namespace waiting_phase {
 
     delay(50);
 
-    if(toSleep) {
+    currentTime = millis();
+    if(currentTime - initilTime >= waitBeforeSleep){
       sleep();
       init();
     }
