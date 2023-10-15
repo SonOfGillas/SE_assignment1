@@ -3,7 +3,7 @@
 #include <stdlib.h>  
 
 #define NO_RESPONSE -1
-#define BUTTON_PRESS_DELAY 100 // after this time the button can be pressed again
+#define BUTTON_PRESS_DELAY 500 // after this time the button can be pressed again
 
 GAME_SUBPHASE currentGameSubPhase = show_sequence;
 STATUS gameSubPhaseStatus = ok;
@@ -13,7 +13,7 @@ long replicateSequenceStartingTime;
 int sequence[NUM_GREEN_LEDS];
 int responce[NUM_GREEN_LEDS];
 int responceIndex = 0;
-int lastTimeTheButtonsWerePressed[NUM_BUTTONS];
+long lastTimeTheButtonsWerePressed[NUM_BUTTONS];
 long currentTime = 0; 
 int gameT1;
 int gameT2;
@@ -21,6 +21,8 @@ int gameT3;
 
 namespace game_phase {
   static void init() {
+    Serial.println("Difficulty: " + String(difficulty));
+    gameOver=false;
     score = 0;
     currentGameSubPhase = show_sequence;
 
@@ -35,12 +37,12 @@ namespace game_phase {
   }
 
   static void initReplicateSequence(){
-    replicateSequenceStartingTime = millis(); // the reponce time starts now
     responceIndex = 0; 
      for(int i=0;i<NUM_BUTTONS;i++){
       responce[i] = NO_RESPONSE; // set responce array
       lastTimeTheButtonsWerePressed[i] = 0; // set variable for check the button bouncing
     }
+    replicateSequenceStartingTime = millis(); // the reponce time starts now
     Serial.println("Go!");
   }
 
@@ -61,8 +63,8 @@ namespace game_phase {
     
     //turn off leds in sequence
     for(int led : sequence){
-      digitalWrite(led, LOW);
       delay(T2);
+      digitalWrite(led, LOW);
     }
 
     initReplicateSequence();
@@ -84,7 +86,7 @@ namespace game_phase {
           lastTimeTheButtonsWerePressed[i] = currentTime;
           // check if the user has already filled the responce array
           if(responceIndex < NUM_GREEN_LEDS){
-            responce[responceIndex] = buttons[i]; // save the button pressed 
+            responce[responceIndex] = leds[i]; // save the button pressed 
             responceIndex++;
           }
         }
@@ -94,6 +96,19 @@ namespace game_phase {
   }
 
   static STATUS endRound() {
+    Serial.println("Sequence: ");
+    for(int sequence: sequence){
+      Serial.print(sequence);
+      Serial.print(" ");
+    }
+    Serial.println();
+    Serial.println("Response: ");
+    for(int responce: responce){
+      Serial.print(responce);
+      Serial.print(" ");
+    }
+    Serial.println();
+
     //check if the responce time is over
     currentTime = millis();
     if(currentTime - replicateSequenceStartingTime > T3){

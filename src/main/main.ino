@@ -1,13 +1,3 @@
-// phases:
-// - game:
-//   - led sequence
-//   - button_ sequence
-//   - end round
-// - waiting for game:
-//   - fade led
-//   - sleep
-//   - set difficulty with potentiometer
-
 #include "model.h"
 #include "waiting_phase.h"
 #include "game_phase.h"
@@ -57,10 +47,16 @@ void runPhase(){
 
 void checkPhaseSwitch(){
   if(phaseStatus == go_next_phase){
-    if(currentPhase == waiting){
-      currentPhase = game;
-    } else {
-      currentPhase = waiting;
+    switch (currentPhase)
+    {
+      case waiting:
+        currentPhase = game;
+        break;
+      case game:
+        currentPhase = waiting;
+        break;
+      default:
+        break;
     }
     isPhaseChanged = true;
   } else {
